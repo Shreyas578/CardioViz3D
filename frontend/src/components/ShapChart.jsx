@@ -101,33 +101,55 @@ export default function ShapChart({ vessel, patientData }) {
         </div>
       </div>
 
-      <div style={{ height: `${Math.min(data.length * 26 + 24, 300)}px` }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} layout="vertical" margin={{ top: 0, right: 60, left: 14, bottom: 0 }}>
-            <XAxis type="number" hide domain={['dataMin', 'dataMax']} />
-            <YAxis
-              dataKey="name"
-              type="category"
-              width={120}
-              tick={{ fill: '#334155', fontSize: 10, fontFamily: 'monospace', fontWeight: 600 }}
-              axisLine={false}
-              tickLine={false}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <ReferenceLine x={0} stroke="#94A3B8" strokeWidth={1.5} />
-            <Bar dataKey="value" radius={[0, 3, 3, 0]} maxBarSize={14}>
-              {data.map((entry, i) => (
-                <Cell key={i} fill={entry.fill} fillOpacity={0.9} />
-              ))}
-              <LabelList
-                dataKey="value"
-                position="right"
-                formatter={v => v.toFixed(3)}
-                style={{ fill: '#1E293B', fontSize: 10, fontFamily: 'monospace', fontWeight: 600 }}
-              />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+      {/* Aligned, Zero-Collision Clinical Attribution List & Horizontal Bars */}
+      <div className="space-y-1.5 max-h-[380px] overflow-y-auto pr-1">
+        {data.map((item, idx) => {
+          const maxAbs = Math.max(...data.map(d => Math.abs(d.value)), 0.01)
+          const pct = Math.min(Math.round((Math.abs(item.value) / maxAbs) * 100), 100)
+          const isRisk = item.value > 0
+
+          return (
+            <div 
+              key={idx}
+              className="flex items-center text-xs py-1 px-1.5 rounded hover:bg-slate-100/80 transition-colors group"
+            >
+              {/* Feature Name & Value (Left aligned) */}
+              <div className="w-[145px] shrink-0 font-mono text-[11px] font-semibold text-slate-800 truncate" title={item.name}>
+                {item.name}
+              </div>
+
+              {/* Protective (Left Bar) */}
+              <div className="flex-1 flex justify-end items-center h-4 pr-1.5 border-r border-slate-300">
+                {!isRisk && (
+                  <div className="flex items-center gap-1.5 justify-end w-full">
+                    <span className="text-[10px] font-mono font-bold text-emerald-600 shrink-0">
+                      {item.value.toFixed(3)}
+                    </span>
+                    <div 
+                      className="h-3 rounded-l bg-emerald-500 transition-all group-hover:bg-emerald-600"
+                      style={{ width: `${pct}%`, maxWidth: '100%' }}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Risk (Right Bar) */}
+              <div className="flex-1 flex justify-start items-center h-4 pl-1.5 border-l border-slate-300">
+                {isRisk && (
+                  <div className="flex items-center gap-1.5 justify-start w-full">
+                    <div 
+                      className="h-3 rounded-r bg-rose-500 transition-all group-hover:bg-rose-600"
+                      style={{ width: `${pct}%`, maxWidth: '100%' }}
+                    />
+                    <span className="text-[10px] font-mono font-bold text-rose-600 shrink-0">
+                      +{item.value.toFixed(3)}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        })}
       </div>
 
       {/* Quick summary cards with high-contrast text */}

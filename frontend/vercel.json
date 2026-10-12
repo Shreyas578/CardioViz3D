@@ -2,12 +2,8 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/(predict|explain|metrics|whatif|plots)/(.*)",
-      "destination": "https://${BACKEND_URL}/$1/$2"
-    },
-    {
-      "source": "/(predict|explain|metrics|whatif|plots)",
-      "destination": "https://${BACKEND_URL}/$1"
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
     },
     {
       "source": "/(.*)",
