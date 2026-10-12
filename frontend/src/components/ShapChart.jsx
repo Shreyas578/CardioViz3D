@@ -101,46 +101,46 @@ export default function ShapChart({ vessel, patientData }) {
         </div>
       </div>
 
-      <div style={{ height: `${Math.min(data.length * 26 + 20, 280)}px` }}>
+      <div style={{ height: `${Math.min(data.length * 26 + 24, 300)}px` }}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} layout="vertical" margin={{ top: 0, right: 50, left: 8, bottom: 0 }}>
+          <BarChart data={data} layout="vertical" margin={{ top: 0, right: 60, left: 14, bottom: 0 }}>
             <XAxis type="number" hide domain={['dataMin', 'dataMax']} />
             <YAxis
               dataKey="name"
               type="category"
-              width={110}
-              tick={{ fill: '#94A3B8', fontSize: 9, fontFamily: 'monospace' }}
+              width={120}
+              tick={{ fill: '#334155', fontSize: 10, fontFamily: 'monospace', fontWeight: 600 }}
               axisLine={false}
               tickLine={false}
             />
             <Tooltip content={<CustomTooltip />} />
-            <ReferenceLine x={0} stroke="#334155" strokeWidth={1} />
+            <ReferenceLine x={0} stroke="#94A3B8" strokeWidth={1.5} />
             <Bar dataKey="value" radius={[0, 3, 3, 0]} maxBarSize={14}>
               {data.map((entry, i) => (
-                <Cell key={i} fill={entry.fill} fillOpacity={0.85} />
+                <Cell key={i} fill={entry.fill} fillOpacity={0.9} />
               ))}
               <LabelList
                 dataKey="value"
                 position="right"
                 formatter={v => v.toFixed(3)}
-                style={{ fill: '#64748b', fontSize: 9, fontFamily: 'monospace' }}
+                style={{ fill: '#1E293B', fontSize: 10, fontFamily: 'monospace', fontWeight: 600 }}
               />
             </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Quick summary */}
+      {/* Quick summary cards with high-contrast text */}
       {positive.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-white/5 grid grid-cols-2 gap-2 text-[10px]">
-          <div className="bg-rose-950/20 rounded-lg p-2 border border-rose-500/10">
-            <div className="text-rose-400 font-semibold mb-1">Top Risk Factor</div>
-            <div className="text-slate-300 truncate">{positive[0]?.name}</div>
+        <div className="mt-3 pt-3 border-t border-slate-200 grid grid-cols-2 gap-2 text-xs">
+          <div className="bg-rose-50/90 rounded-lg p-2.5 border border-rose-200 shadow-sm">
+            <div className="text-rose-700 font-bold mb-0.5 text-[11px] uppercase tracking-wide">Top Risk Factor</div>
+            <div className="text-slate-900 font-semibold truncate text-xs">{positive[0]?.name}</div>
           </div>
           {negative.length > 0 && (
-            <div className="bg-emerald-950/20 rounded-lg p-2 border border-emerald-500/10">
-              <div className="text-emerald-400 font-semibold mb-1">Top Protective</div>
-              <div className="text-slate-300 truncate">{negative[0]?.name}</div>
+            <div className="bg-emerald-50/90 rounded-lg p-2.5 border border-emerald-200 shadow-sm">
+              <div className="text-emerald-700 font-bold mb-0.5 text-[11px] uppercase tracking-wide">Top Protective</div>
+              <div className="text-slate-900 font-semibold truncate text-xs">{negative[0]?.name}</div>
             </div>
           )}
         </div>
